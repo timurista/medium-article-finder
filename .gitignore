@@ -1,1 +1,3 @@
 secrets
+*/lib/src/*
+!*/lib/src/lambda_handler.py

@@ -1,4 +1,9 @@
-# Welcome to your CDK TypeScript project!
+# The Medium Article Blog Project
+
+## testing out scrapy python in lambda
+```sh
+docker run -v $(pwd):/outputs -it amazonlinux
+```
 
 This is a blank project for TypeScript development with CDK.
 
