@@ -10,6 +10,7 @@ pp = pprint.PrettyPrinter(depth=6)
 
 s3 = boto3.client('s3')
 BUCKET = os.environ.get('BUCKET', 'sample-bucket')
+CACHE_BUCKET = os.environ.get('CACHE_BUCKET', 'sample-bucket')
 
 class BlogSpider(scrapy.Spider):
     name = 'blogspider'
@@ -96,7 +97,8 @@ def main(event, context):
 
     data = open('/tmp/blog_result.json', 'rb')
 
-    # s3.put_object(Bucket = BUCKET, Key='blogs/papers.json', Body=data)
+    s3.put_object(Bucket = BUCKET, Key='blogs/articles.json', Body=data)
+    s3.put_object(Bucket = CACHE_BUCKET, Key="blogs/articles.json", Body=data)
     print('All done.')
 
 if __name__ == "__main__":

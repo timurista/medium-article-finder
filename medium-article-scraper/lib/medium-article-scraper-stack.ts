@@ -15,29 +15,23 @@ export class MediumArticleScraperStack extends cdk.Stack {
       resources: ["*"]
     });
 
-    // new s3deploy.BucketDeployment(this, "DeployWithInvalidation", {
-    //   sources: [s3deploy.Source.asset("./blogs")],
-    //   destinationBucket: bucket,
-    //   distribution,
-    //   distributionPaths: ["/blogs/*.json"]
-    // });
-
     const lambdaFn = new lambda.Function(this, "blogPostAggregator", {
       runtime: lambda.Runtime.PYTHON_3_7,
       handler: "lambda_handler.main",
-      code: new lambda.AssetCode(path.join(__dirname, "prodsrc")),
+      code: new lambda.AssetCode(path.join(__dirname, "build-src")),
       timeout: cdk.Duration.seconds(50),
       environment: {
         BUCKET: "www.thetimurista.com",
+        CACHE_BUCKET: 'tim-urista-web-blog-articles-distribution-v1'
       }
     });
 
     lambdaFn.addToRolePolicy(s3ReadWritePolicy);
 
-          // Run every 3 hours a day
+      // Run every 3 hours a day
       // See https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
       new events.Rule(this, "Rule", {
-        schedule: events.Schedule.expression("cron(10 3 ? * * *)"),
+        schedule: events.Schedule.expression("cron(12 3 ? * * *)"),
         targets: [new targets.LambdaFunction(lambdaFn)]
       });
     // The code that defines your stack goes here
