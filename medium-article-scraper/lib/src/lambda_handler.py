@@ -73,12 +73,24 @@ class BlogSpider(scrapy.Spider):
         except Exception as e:
             print(e)
 
-        # snippet = Selector(blog_post.description).css('.medium-feed-snippet').extract()
+
+        snippet = Selector(text=blog_post.description).css('.medium-feed-snippet::text').extract()
+        firstParagraph = Selector(text=blog_post.description).css('p::text').extract()
+        if len(snippet) <= 0 and len(firstParagraph) > 0:
+            snippet = firstParagraph[0]
+        elif len(snippet) <= 0:
+            snippet = ""
+        else:
+            snippet = snippet[0]
+
+        id = blog_post.id.split('/')[-1]
         yield {
+            "id": id,
+            "snippet": snippet,
             "link": link,
             "title": blog_post.title,
             "content": article,
-            "description": blog_post.description,
+            "description": snippet,
             "author": blog_post.author,
             "published": blog_post.published,
             "tags": tags,
@@ -96,9 +108,13 @@ def main(event, context):
     process.start() # the script will block here until the crawling is finished
 
     data = open('/tmp/result.json', 'rb')
-    print(data.read())
+    
+    # print("READ FILE", data.read())
     s3.put_object(Bucket = BUCKET, Key='blogs/articles.json', Body=data)
-    s3.put_object(Bucket = CACHE_BUCKET, Key="blogs/articles.json", Body=data)
+    try:
+        s3.put_object(Bucket = CACHE_BUCKET, Key="blogs/articles.json", Body=data)
+    except Exception as e:
+        print(e)
     print('All done.')
 
 if __name__ == "__main__":
