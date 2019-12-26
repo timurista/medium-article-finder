@@ -15,10 +15,9 @@ CACHE_BUCKET = os.environ.get('CACHE_BUCKET', 'sample-bucket')
 class BlogSpider(scrapy.Spider):
     name = 'blogspider'
     urls = [
-        "https://medium.com/feed/tag/ai",
+        "https://medium.com/feed/towardsdatascience"
         "https://medium.com/feed/tag/cloud-computing",
         "https://medium.com/feed/tag/deep-learning",
-        "https://medium.com/feed/@timothy.urista"
     ]
     links = []
     items = []
