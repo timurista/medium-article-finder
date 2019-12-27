@@ -1,6 +1,6 @@
 # The Medium Article Blog Project
 
-## testing out scrapy python in lambda
+## testing out scrapy python in lambda (you should make the layer or local files here)
 ```sh
 docker run -v $(pwd):/outputs -it amazonlinux
 ```
